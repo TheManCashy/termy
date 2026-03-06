@@ -176,14 +176,24 @@ impl TerminalView {
         if !interactive_hit && event.click_count == 2 {
             #[cfg(target_os = "macos")]
             window.titlebar_double_click();
-            #[cfg(not(target_os = "macos"))]
+            // On Windows the platform handles double-click natively via the
+            // titlebar drag region (HTCAPTION), toggling maximize/restore.
+            // zoom_window() only maximizes and never restores, so skip it.
+            #[cfg(not(any(target_os = "macos", target_os = "windows")))]
             window.zoom_window();
+            // On Windows, let the event propagate to DefWindowProc so the
+            // native maximize/restore toggle takes effect.
+            #[cfg(not(target_os = "windows"))]
             cx.stop_propagation();
             return;
         }
 
         if next_move_armed {
             self.arm_titlebar_window_move();
+            // On Windows, the platform handles window dragging natively via the
+            // titlebar drag region (HTCAPTION). Don't stop propagation so
+            // DefWindowProc can initiate the move.
+            #[cfg(not(target_os = "windows"))]
             cx.stop_propagation();
         }
     }
@@ -199,6 +209,9 @@ impl TerminalView {
         }
 
         self.tab_strip.titlebar_move_armed = Self::titlebar_move_armed_after_mouse_up();
+        // On Windows, don't stop propagation so the native titlebar handling
+        // (via HTCAPTION) can process the event through DefWindowProc.
+        #[cfg(not(target_os = "windows"))]
         cx.stop_propagation();
     }
 
