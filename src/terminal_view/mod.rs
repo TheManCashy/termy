@@ -15,7 +15,7 @@ use gpui::{
     Focusable, Font, FontWeight, InteractiveElement, IntoElement, KeyDownEvent, MouseButton,
     MouseDownEvent, MouseMoveEvent, MouseUpEvent, ParentElement, Pixels, Render, ScrollWheelEvent,
     SharedString, Size, StatefulInteractiveElement, Styled, TouchPhase, WeakEntity, Window,
-    WindowBackgroundAppearance, div, point, px,
+    WindowBackgroundAppearance, WindowControlArea, div, point, px,
 };
 use std::{
     cell::RefCell,

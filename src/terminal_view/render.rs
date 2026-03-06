@@ -1951,6 +1951,7 @@ impl Render for TerminalView {
         let titlebar_element: Option<AnyElement> = (titlebar_height > 0.0).then(|| {
             let titlebar_container = div()
                 .id("titlebar")
+                .window_control_area(WindowControlArea::Drag)
                 .w_full()
                 .h(px(titlebar_height))
                 .flex_none()
